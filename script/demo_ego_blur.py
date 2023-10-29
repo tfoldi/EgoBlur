@@ -206,11 +206,12 @@ def get_device() -> str:
     """
     Return the device type
     """
-    return (
-        "cpu"
-        if not torch.cuda.is_available()
-        else f"cuda:{torch.cuda.current_device()}"
-    )
+    if torch.cuda.is_available():
+        return f"cuda:{torch.cuda.current_device()}"
+    elif torch.backends.mps.is_available():
+        return "mps"
+    else:
+        return "cpu"
 
 
 def read_image(image_path: str) -> np.ndarray:
